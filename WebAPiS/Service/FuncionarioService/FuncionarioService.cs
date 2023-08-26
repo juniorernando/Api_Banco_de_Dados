@@ -47,7 +47,28 @@ namespace WebAPiS.Service.FuncionarioService
 
         public Task<ServiceResponce<FuncionarioModel>> GetFuncionarioById(int id)
         {
-            throw new NotImplementedException();
+            ServiceResponce<FuncionarioModel> serviceResponce = new ServiceResponce<FuncionarioModel>();
+
+            try 
+            {
+                FuncionarioModel funcionario = _context.Funcionarios.FirstOrDefault(x => x.Id == id);
+
+                if (funcionario == null) 
+                {
+                    serviceResponce.Dados = null;
+                    serviceResponce.Mensagem = "Usuário não localizado!";
+                    serviceResponce.Sucesso = false;
+                }
+
+                serviceResponce.Dados = funcionario;
+
+            }catch(Exception ex) 
+            {
+                serviceResponce.Mensagem=ex.Message;
+                serviceResponce.Sucesso = false;
+            }
+
+            return serviceResponce;
         }
 
         public async Task<ServiceResponce<List<FuncionarioModel>>> GetFuncionario()
