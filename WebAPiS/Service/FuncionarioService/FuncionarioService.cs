@@ -1,12 +1,13 @@
 ﻿using WebAPiS.DataContext;
 using WebAPiS.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPiS.Service.FuncionarioService
 {
     public class FuncionarioService : IFuncionarioInterface
     {
         private readonly ApplicationDbContext _context;
-        public FuncionarioService(ApplicationDbContext context) 
+        public FuncionarioService(ApplicationDbContext context)
         {
             _context = context;
 
@@ -15,9 +16,9 @@ namespace WebAPiS.Service.FuncionarioService
         {
             ServiceResponce<List<FuncionarioModel>> serviceResponce = new ServiceResponce<List<FuncionarioModel>>();
 
-            try 
+            try
             {
-                if(novoFuncionario == null) 
+                if (novoFuncionario == null)
                 {
                     serviceResponce.Dados = null;
                     serviceResponce.Mensagem = "Informar dados!";
@@ -31,7 +32,8 @@ namespace WebAPiS.Service.FuncionarioService
 
                 serviceResponce.Dados = _context.Funcionarios.ToList();
 
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 serviceResponce.Mensagem = ex.Message;
                 serviceResponce.Sucesso = false;
@@ -44,33 +46,6 @@ namespace WebAPiS.Service.FuncionarioService
             throw new NotImplementedException();
         }
 
-
-        public Task<ServiceResponce<FuncionarioModel>> GetFuncionarioById(int id)
-        {
-            ServiceResponce<FuncionarioModel> serviceResponce = new ServiceResponce<FuncionarioModel>();
-
-            try 
-            {
-                FuncionarioModel funcionario = _context.Funcionarios.FirstOrDefault(x => x.Id == id);
-
-                if (funcionario == null) 
-                {
-                    serviceResponce.Dados = null;
-                    serviceResponce.Mensagem = "Usuário não localizado!";
-                    serviceResponce.Sucesso = false;
-                }
-
-                serviceResponce.Dados = funcionario;
-
-            }catch(Exception ex) 
-            {
-                serviceResponce.Mensagem=ex.Message;
-                serviceResponce.Sucesso = false;
-            }
-
-            return serviceResponce;
-        }
-
         public async Task<ServiceResponce<List<FuncionarioModel>>> GetFuncionario()
         {
             ServiceResponce<List<FuncionarioModel>> serviceResponce = new ServiceResponce<List<FuncionarioModel>>();
@@ -78,7 +53,7 @@ namespace WebAPiS.Service.FuncionarioService
             try
             {
                 serviceResponce.Dados = _context.Funcionarios.ToList();
-                if(serviceResponce.Dados.Count == 0)
+                if (serviceResponce.Dados.Count == 0)
                 {
                     serviceResponce.Mensagem = "Nenhum dado encontrado!";
                 }
@@ -87,14 +62,46 @@ namespace WebAPiS.Service.FuncionarioService
             {
                 serviceResponce.Mensagem = ex.Message;
                 serviceResponce.Sucesso = false;
-
             }
-            return serviceResponce; 
+            return serviceResponce;
 
         }
-        public Task<ServiceResponce<List<FuncionarioModel>>> InativaFuncionario(int id)
+
+        public Task<ServiceResponce<FuncionarioModel>> GetFuncionarioById(int id)
         {
             throw new NotImplementedException();
+        }
+        public async Task<ServiceResponce<List<FuncionarioModel>>> InativaFuncionario(int id)
+        {
+            ServiceResponce<List<FuncionarioModel>> serviceResponce = new ServiceResponce<List<FuncionarioModel>>();
+
+            try
+            {
+
+                FuncionarioModel funcionario = _context.Funcionarios.FirstOrDefault(x => x.Id == id);
+
+                if (funcionario == null)
+                {
+                    serviceResponce.Dados = null;
+                    serviceResponce.Mensagem = "Usuário não localizado!";
+                    serviceResponce.Sucesso = false;
+                }
+
+                funcionario.Ativo = false;
+                funcionario.DataDeAlteracao = DateTime.Now.ToLocalTime();
+
+                _context.Funcionarios.Update(funcionario);
+                await _context.SaveChangesAsync();
+
+                serviceResponce.Dados = _context.Funcionarios.ToList();
+
+            }
+            catch (Exception ex)
+            {
+                serviceResponce.Mensagem = ex.Message;
+                serviceResponce.Sucesso = false;
+            }
+            return serviceResponce;
         }
 
         public Task<ServiceResponce<List<FuncionarioModel>>> UpdateFuncionario(FuncionarioModel editaFuncionario)
