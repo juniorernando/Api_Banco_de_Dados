@@ -1,4 +1,7 @@
-﻿namespace WebAPiS.Models
+﻿using WebAPiS.Models;
+
+
+namespace WebAPiS.Models
 {
     public class ServiceResponce<T>
     {

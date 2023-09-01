@@ -70,7 +70,8 @@ namespace WebAPiS.Service.FuncionarioService
         public Task<ServiceResponce<FuncionarioModel>> GetFuncionarioById(int id)
         {
             throw new NotImplementedException();
-        }
+
+     }
         public async Task<ServiceResponce<List<FuncionarioModel>>> InativaFuncionario(int id)
         {
             ServiceResponce<List<FuncionarioModel>> serviceResponce = new ServiceResponce<List<FuncionarioModel>>();

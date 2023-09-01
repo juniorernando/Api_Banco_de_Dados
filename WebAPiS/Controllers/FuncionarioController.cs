@@ -24,12 +24,13 @@ namespace WebAPiS.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponce<List<FuncionarioModel>>>> GetFuncionarioById(int id)
+        public async Task<ActionResult<ServiceResponce<FuncionarioModel>>> GetFuncionarioById(int id)
         {
            ServiceResponce<FuncionarioModel> serviceResponce = await _funcionarioInterface.GetFuncionarioById(id);
 
             return Ok(serviceResponce);
         }
+
 
         [HttpPost]
         public async Task<ActionResult<ServiceResponce<List<FuncionarioModel>>>> CreateFuncionario(FuncionarioModel novoFuncionario)

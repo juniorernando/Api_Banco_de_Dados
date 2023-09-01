@@ -1,6 +1,11 @@
-﻿namespace WebAPiS.Enums
+﻿using System.Text.Json.Serialization;
+
+namespace WebAPiS.Enums
 {
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum DepartamentoEnum
+
     {
         RH,
         Financeiro,
